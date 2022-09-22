@@ -19,7 +19,7 @@ class Node implements Comparable{
         if(including) weight += items.get(known-1).getWeight();
         this.including = including;
         this.bound = 0;
-        if(known != numItems)   this.bound = this.getBound(this.known, this.weight, capacity, items);
+        if(known != numItems)   this.bound = this.getBound(this.known, capacity, items);
     }
 
     public Node(int bound){
@@ -31,8 +31,11 @@ class Node implements Comparable{
         this.bound = bound;
     }
 
-    private int getBound(int known, int weight, int capacity, ArrayList<Item> items){
-        return this.value + (int)Math.ceil( ((double)items.get(known).getValue()/(double)items.get(known).getWeight()) * (double)(capacity-weight));
+    private int getBound(int index, int capacity, ArrayList<Item> items){
+         Item next = items.get(index);
+         return this.value + (int)Math.ceil( (
+                 (double)next.getValue()/(double)next.getWeight())
+                 * (double)(capacity-this.weight));
     }
 
 
@@ -107,12 +110,20 @@ public class BranchAndBound {
 
         }
 
-
+        int w = 0;
+        int v = 0;
         while(maxNode.getKnown() > 0){
-            if(maxNode.isIncluding())
-                System.out.println(items.get(maxNode.getKnown()-1).getIndex());
+            if(maxNode.isIncluding()) {
+                System.out.println(items.get(maxNode.getKnown() - 1).getIndex());
+                w+=items.get(maxNode.getKnown() - 1).getWeight();
+                v+=items.get(maxNode.getKnown() - 1).getValue();
+            }
             maxNode = maxNode.getParent();
+
         }
+
+        System.out.println(  "Capacity Used: "+ w);
+        System.out.println(  "Value Gained : "+ v);
 
     }
 

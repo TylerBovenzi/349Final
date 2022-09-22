@@ -10,8 +10,8 @@ import static java.util.Comparator.comparing;
 public class main {
 
     public static void main(String args[]) throws IOException {
-
-        String filename = "src/easy20.txt";
+        long startTime = System.nanoTime();
+        String filename = "src/hard50.txt";
         int ni[] = {0};
         int c[] = {0};
         ArrayList<Item> items = fileHelper.loadItems(filename, ni, c);
@@ -21,9 +21,12 @@ public class main {
         int capacity = c[0];
 
         //BFhelper(capacity, numItems, items);
-        DynamicTable(capacity, numItems, items);
-        BranchAndBound.run(capacity, numItems, items);
-        //greedy(capacity, numItems, items);
+        //DynamicTable(capacity, numItems, items);
+        //BranchAndBound.run(capacity, numItems, items);
+        greedy(capacity, numItems, items);
+        long endTime   = System.nanoTime();
+        long totalTime = endTime - startTime;
+        System.out.println(totalTime/1000);
     }
 
 
