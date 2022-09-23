@@ -22,9 +22,6 @@ public class fileHelper {
                     itemString.remove(s);
                 }
             }
-
-            //System.out.println(Arrays.deepToString(itemString.toArray()));
-
             result.add(new Item(
                     parseInt(itemString.get(0)),
                     parseInt(itemString.get(1)),

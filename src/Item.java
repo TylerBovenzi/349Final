@@ -31,7 +31,20 @@ public class Item implements Comparable{
     @Override
     public int compareTo(Object o) {
         Item other = (Item)o;
-        return -(this.getValue()/ this.getWeight()) + (other.getValue()/ other.getWeight());
-    }
+        //return (int)((-1*(double)this.getValue()/ (double)this.getWeight()) + ((double)other.getValue()/ (double)other.getWeight()));
+        double v1 = this.getValue();
+        double v2 = ((Item) o).getValue();
+        double w1 = this.getWeight();
+        double w2 = ((Item) o).getWeight();
+        if(v1/w1  == v2/w2){
+            return v1>v2?-1:1;
+        }
+        if(v1/w1  > v2/w2) return -1;
+        return 1;
+
+        }
+
+
+
 }
 
