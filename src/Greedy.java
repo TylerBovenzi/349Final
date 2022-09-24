@@ -31,4 +31,29 @@ public class Greedy {
         System.out.println();
     }
 
+    public static int runInt(int capacity, int numItems, ArrayList<Item> items) {
+        int roomLeft = capacity;
+        ArrayList<Item> sorted = new ArrayList<>(items);
+
+        boolean[] result = new boolean[numItems];
+        int totalWeight = 0;
+        int totalValue = 0;
+        Collections.sort(sorted);
+        while (sorted.size() > 0) {
+
+            Item first = sorted.get(0);
+            if (first.getWeight() <= roomLeft) {
+                roomLeft -= first.getWeight();
+
+                result[first.getIndex() - 1] = true;
+                totalWeight += first.getWeight();
+                totalValue += first.getValue();
+            }
+            sorted.remove(0);
+        }
+
+        return totalValue;
+
+    }
+
 }

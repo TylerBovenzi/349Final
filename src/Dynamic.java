@@ -1,9 +1,11 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class Dynamic {
 
     public static void run(int capacity, int numItems, ArrayList<Item> items){
-
         boolean[] result = new boolean[numItems];
         int totalWeight = 0;
         int totalValue = 0;
@@ -21,23 +23,31 @@ public class Dynamic {
             }
         int n = capacity;
         int v = table[n];
+
+        Collections.sort(items, new Comparator<Item>() {
+            public int compare(Item o1, Item o2) {
+                return o2.getWeight() - o1.getWeight();
+            }
+        });
         int weight = 0;
         int val = 0;
         ArrayList<Item> tempItems = new ArrayList<Item>(items);
         while(n > 0){
             boolean found = false;
             for(Item i: tempItems) {
-                if(n-i.getWeight() >= 0)
+                if(n-i.getWeight() >= 0) {
+                    if(!result[i.getIndex() - 1])
+                        if (table[n] - i.getValue() == safeGet(table, n - i.getWeight())) {
+                            n = n - i.getWeight();
+                            v = v - i.getValue();
+                            result[i.getIndex() - 1] = true;
+                            totalValue += i.getValue();
+                            totalWeight += i.getWeight();
+                            found = true;
+                            break;
+                        }
 
-                    if (table[n] - i.getValue() == safeGet(table, n-i.getWeight())) {
-                        n = n - i.getWeight();
-                        v = v - i.getValue();
-                        result[i.getIndex()-1] = true;
-                        totalValue += i.getValue();
-                        totalWeight += i.getWeight();
-                        found=true;
-                        break;
-                    }
+                }
             }
             if(!found) n--;
         }

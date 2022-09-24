@@ -9,7 +9,6 @@ class Node implements Comparable{
     private int weight;
     private int bound;
     private final int known;
-
     private boolean including; //0 for no, 1 for yes
 
      public Node(Node parent, boolean including, ArrayList<Item> items, int capacity, int numItems){
@@ -94,23 +93,27 @@ public class BranchAndBound {
     public static void run(int capacity, int numItems, ArrayList<Item> itemsIn) {
         PriorityQueue<Node> q = new PriorityQueue<>();
         ArrayList<Item> items = new ArrayList<>(itemsIn);
+        capacity += 1;
         Collections.sort(items);
 
-        Collections.sort(items);
-        for(Item i:items){
-            double v = i.getValue();
-            double w = i.getWeight();
-            System.out.println(i.getIndex() + "\t" + (v/w) + "\t" +v);
-        }
+//        for(Item i:items){
+//            double v = i.getValue();
+//            double w = i.getWeight();
+//            System.out.println(i.getIndex() + "\t" + (v/w) + "\t" +v);
+//        }
 
         Item temp = items.get(0);
         Node start = new Node( (int)Math.ceil(((double)capacity*temp.getValue())/(double) temp.getWeight()));
         q.add(start);
-        int max = -1;
+        //int max = -1;
+        int max = Greedy.runInt(capacity, numItems, items);
         Node maxNode = null;
         while(!q.isEmpty()){
             Node current = q.poll();
-            if(current.getBound() < max) break;
+            if(current.getBound() < max) {
+                current = null;
+                break;
+            }
             Node with = new Node(current, true, items, capacity, numItems);
             Node without = new Node(current, false, items, capacity, numItems);
 
