@@ -4,7 +4,7 @@ import java.util.PriorityQueue;
 
 class Node implements Comparable{
 
-    private Node parent;
+    //private Node parent;
     private int value;
     private int weight;
     private int bound;
@@ -12,7 +12,7 @@ class Node implements Comparable{
     private boolean including; //0 for no, 1 for yes
 
      public Node(Node parent, boolean including, ArrayList<Item> items, int capacity, int numItems){
-        this.parent = parent;
+        //this.parent = parent;
         this.value = parent.value;
         this.known = parent.known + 1;
         if(including) value += items.get(known-1).getValue();
@@ -25,7 +25,7 @@ class Node implements Comparable{
     }
 
     public Node(int bound){
-        this.parent = null;
+        //this.parent = null;
         this.value = 0;
         this.weight = 0;
         this.known = 0;
@@ -57,9 +57,9 @@ class Node implements Comparable{
     }
 
 
-    public Node getParent() {
-        return parent;
-    }
+    //public Node getParent() {
+    //    return parent;
+    //}
 
     public int getValue() {
         return value;
@@ -148,23 +148,23 @@ public class BranchAndBound {
         int w = 0;
         int v = 0;
         boolean[] result = new boolean[numItems];
-        while(maxNode.getKnown() > 0){
-            if(maxNode.isIncluding()) {
-                //System.out.println(items.get(maxNode.getKnown() - 1).getIndex());
-                result[items.get(maxNode.getKnown() - 1).getIndex()-1] = true;
-                w+=items.get(maxNode.getKnown() - 1).getWeight();
-                v+=items.get(maxNode.getKnown() - 1).getValue();
-            }
-            maxNode = maxNode.getParent();
-
-        }
+//        while(maxNode.getKnown() > 0){
+//            if(maxNode.isIncluding()) {
+//                //System.out.println(items.get(maxNode.getKnown() - 1).getIndex());
+//                result[items.get(maxNode.getKnown() - 1).getIndex()-1] = true;
+//                w+=items.get(maxNode.getKnown() - 1).getWeight();
+//                v+=items.get(maxNode.getKnown() - 1).getValue();
+//            }
+//            //maxNode = maxNode.getParent();
+//
+//        }
 
         System.out.print(  "Using Branch And Bound the best feasible solution found: \tValue "+ v);
         System.out.print( ", Weight "+ w);
         for(int i = 0; i < numItems; i++){
             if(result[i]) System.out.print(" " + (i+1));
         }
-        System.out.println();
+        System.out.println(max);
 
     }
 
