@@ -4,7 +4,7 @@ import java.util.PriorityQueue;
 
 class Node implements Comparable{
 
-    //private Node parent;
+    private Node parent;
     private int value;
     private int weight;
     private int bound;
@@ -12,7 +12,7 @@ class Node implements Comparable{
     private boolean including; //0 for no, 1 for yes
 
      public Node(Node parent, boolean including, ArrayList<Item> items, int capacity, int numItems){
-        //this.parent = parent;
+        this.parent = parent;
         this.value = parent.value;
         this.known = parent.known + 1;
         if(including) value += items.get(known-1).getValue();
@@ -25,7 +25,7 @@ class Node implements Comparable{
     }
 
     public Node(int bound){
-        //this.parent = null;
+        this.parent = null;
         this.value = 0;
         this.weight = 0;
         this.known = 0;
@@ -57,9 +57,9 @@ class Node implements Comparable{
     }
 
 
-    //public Node getParent() {
-    //    return parent;
-    //}
+    public Node getParent() {
+        return parent;
+    }
 
     public int getValue() {
         return value;
@@ -84,7 +84,7 @@ class Node implements Comparable{
     @Override
     public int compareTo(Object o) {
         Node other = (Node)o;
-        return -(this.getBound()) + (other.getBound());
+        return (-this.getBound()) + (other.getBound());
     }
 }
 
@@ -105,59 +105,78 @@ public class BranchAndBound {
         Item temp = items.get(0);
         Node start = new Node( (int)Math.ceil(((double)capacity*temp.getValue())/(double) temp.getWeight()));
         q.add(start);
-        //int max = -1;
-        int max = Greedy.runInt(capacity, numItems, items);
+
+        int max = -1;
+        //int max = 0;
+        //int max = Greedy.runInt(capacity, numItems, items);
         Node maxNode = null;
-        while(!q.isEmpty()){
+        while(!q.isEmpty()) {
+//            if(q1.size()> 200000){
+//                for(int i = 0; i<200000; i++){
+//                    if(q1.get(i).getBound() < max) {
+//                        q.remove(q1.get(i));
+//                        q1.remove(i);
+//
+//                    }
+//
+//                }
+//            }
             Node current = q.poll();
-            if(current.getBound() < max) {
-                current = null;
-                break;
-            }
+            //q1.remove(current);
+            System.out.println(q.size());
+            //q.remove(current);
+            //if(current.getBound() > max) {
+
+
             Node with = new Node(current, true, items, capacity, numItems);
             Node without = new Node(current, false, items, capacity, numItems);
 
-            if(with.getWeight() < capacity){        //if with is feasible
-                if(with.getKnown() == numItems){
-                    if(with.getValue() > max){
-                        max =with.getValue();
+            if (with.getWeight() < capacity) {        //if with is feasible
+                if (with.getKnown() == numItems) {
+                    if (with.getValue() > max) {
+                        max = with.getValue();
                         maxNode = with;
                     }
                 } else {
-                    if(with.getBound() > max)
+                    if (with.getBound() > max) {
                         q.add(with);
-                }
-            }
-
-            if(without.getWeight() < capacity){        //if without is feasible (it should be)
-                if(without.getKnown() == numItems){
-                    if(without.getValue() > max){
-                        max =without.getValue();
-                        maxNode = without;
+                        //q1.add(with);
                     }
-                } else {
-                    if(without.getBound() > max)
-                        q.add(without);
                 }
             }
 
+            //if(without.getWeight() < capacity){        //if without is feasible (it should be)
+            if (without.getKnown() == numItems) {
+                if (without.getValue() > max) {
+                    max = without.getValue();
+                    maxNode = without;
 
+                }
+            } else {
+                if (without.getBound() > max) {
+                    q.add(without);
+                    //q1.add(without);
+                }
+            }
+            //}
+
+            //}
 
         }
 
         int w = 0;
         int v = 0;
         boolean[] result = new boolean[numItems];
-//        while(maxNode.getKnown() > 0){
-//            if(maxNode.isIncluding()) {
-//                //System.out.println(items.get(maxNode.getKnown() - 1).getIndex());
-//                result[items.get(maxNode.getKnown() - 1).getIndex()-1] = true;
-//                w+=items.get(maxNode.getKnown() - 1).getWeight();
-//                v+=items.get(maxNode.getKnown() - 1).getValue();
-//            }
-//            //maxNode = maxNode.getParent();
-//
-//        }
+        while(maxNode.getKnown() > 0){
+            if(maxNode.isIncluding()) {
+                //System.out.println(items.get(maxNode.getKnown() - 1).getIndex());
+                result[items.get(maxNode.getKnown() - 1).getIndex()-1] = true;
+                w+=items.get(maxNode.getKnown() - 1).getWeight();
+                v+=items.get(maxNode.getKnown() - 1).getValue();
+            }
+            maxNode = maxNode.getParent();
+
+        }
 
         System.out.print(  "Using Branch And Bound the best feasible solution found: \tValue "+ v);
         System.out.print( ", Weight "+ w);

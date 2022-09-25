@@ -11,7 +11,7 @@ public class main {
 
     public static void main(String args[]) throws IOException {
         long startTime = System.nanoTime();
-        String filename = "src/easy50NR.txt";
+        String filename = "src/easy50.txt";
         int ni[] = {0};
         int c[] = {0};
 
