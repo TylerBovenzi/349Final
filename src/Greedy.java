@@ -6,7 +6,7 @@ public class Greedy {
     public static void run(int capacity, int numItems, ArrayList<Item> items){
         int roomLeft = capacity;
         ArrayList<Item> sorted = new ArrayList<>(items);
-
+        //Collections.reverse(sorted);
         boolean[] result = new boolean[numItems];
         int totalWeight = 0;
         int totalValue = 0;
@@ -31,9 +31,9 @@ public class Greedy {
         System.out.println();
     }
 
-    public static int runInt(int capacity, int numItems, ArrayList<Item> items) {
+    public static int runInt(int capacity, int numItems, ArrayList<Item> itemsIn) {
         int roomLeft = capacity;
-        ArrayList<Item> sorted = new ArrayList<>(items);
+        ArrayList<Item> sorted = new ArrayList<>(itemsIn);
 
         boolean[] result = new boolean[numItems];
         int totalWeight = 0;

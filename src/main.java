@@ -21,8 +21,9 @@ public class main {
         int capacity = c[0];
 
         //Bruteforce.run(capacity, numItems, items);
-        Greedy.run(capacity, numItems, items);
-        Dynamic.run(capacity, numItems, items);
+        //Greedy.run(capacity, numItems, items);
+        //System.out.println(Greedy.runInt(capacity, numItems, items));
+        //Dynamic.run(capacity, numItems, items);
         BranchAndBound.run(capacity, numItems, items);
 
         long endTime   = System.nanoTime();

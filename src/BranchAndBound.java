@@ -1,101 +1,23 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.PriorityQueue;
-
-class Node implements Comparable{
-
-    private Node parent;
-    private int value;
-    private int weight;
-    private int bound;
-    private final int known;
-    private boolean including; //0 for no, 1 for yes
-
-     public Node(Node parent, boolean including, ArrayList<Item> items, int capacity, int numItems){
-        this.parent = parent;
-        this.value = parent.value;
-        this.known = parent.known + 1;
-        if(including) value += items.get(known-1).getValue();
-        this.weight = parent.weight;
-        if(including) weight += items.get(known-1).getWeight();
-        this.including = including;
-        this.bound = 0;
-        if(known != numItems)   this.bound = this.getBound(this.known, capacity, items, including);
-
-    }
-
-    public Node(int bound){
-        this.parent = null;
-        this.value = 0;
-        this.weight = 0;
-        this.known = 0;
-        this.including = false;
-        this.bound = bound;
-    }
-
-    public void getDetails(int capacity, ArrayList<Item> items){
-         System.out.println("level "+known);
-         System.out.println("value "+value);
-         System.out.println("weight "+weight);
-         System.out.println("including "+including);
-         System.out.println("bound "+bound);
-         Item next = items.get(known);
-         System.out.println("added "+(int)Math.ceil( (
-                 (double)next.getValue()/(double)next.getWeight())));
-         System.out.println("value "+ next.getValue());
-         System.out.println("weight "+ next.getWeight());
-
-         System.out.println("weight left "+ (capacity-this.weight));
-         System.out.println(" ");
-    }
-
-    private int getBound(int index, int capacity, ArrayList<Item> items, boolean including){
-         Item next = items.get(index);
-         return this.value +(int)Math.ceil( (
-                 (double)next.getValue()/(double)next.getWeight())
-                 * (double)(capacity-this.weight));
-    }
-
-
-    public Node getParent() {
-        return parent;
-    }
-
-    public int getValue() {
-        return value;
-    }
-
-    public int getWeight() {
-        return weight;
-    }
-
-    public int getBound() {
-        return bound;
-    }
-
-    public int getKnown() {
-        return known;
-    }
-
-    public boolean isIncluding() {
-        return including;
-    }
-
-    @Override
-    public int compareTo(Object o) {
-        Node other = (Node)o;
-        return (-this.getBound()) + (other.getBound());
-    }
-}
+import java.util.Queue;
 
 public class BranchAndBound {
 
     public static void run(int capacity, int numItems, ArrayList<Item> itemsIn) {
+        //DoubleEnded q = new DoubleEnded();
         PriorityQueue<Node> q = new PriorityQueue<>();
+        //MaxHeap q = new MaxHeap();
         ArrayList<Item> items = new ArrayList<>(itemsIn);
-        capacity += 1;
-        Collections.sort(items);
 
+
+        Collections.sort(items);
+        //Collections.reverse(items);
+
+        int max = Greedy.runInt(capacity, numItems, itemsIn)-1;
+
+        //capacity += 1;
 //        for(Item i:items){
 //            double v = i.getValue();
 //            double w = i.getWeight();
@@ -106,64 +28,64 @@ public class BranchAndBound {
         Node start = new Node( (int)Math.ceil(((double)capacity*temp.getValue())/(double) temp.getWeight()));
         q.add(start);
 
-        int max = -1;
+
+        //int max = -1;
         //int max = 0;
-        //int max = Greedy.runInt(capacity, numItems, items);
+
+        //int max = 4091;
         Node maxNode = null;
         while(!q.isEmpty()) {
-//            if(q1.size()> 200000){
-//                for(int i = 0; i<200000; i++){
-//                    if(q1.get(i).getBound() < max) {
-//                        q.remove(q1.get(i));
-//                        q1.remove(i);
-//
-//                    }
-//
-//                }
-//            }
+
+           // System.out.println(q.size());
+            //System.out.println(max);
+            //System.out.println(q.getMax().getBound() + " " +q.getMin().getBound() );
+            //Node current = q.extractMax();
+            //Node current = q.getMax();
             Node current = q.poll();
+            //current.getDetails(capacity, items);
+            //q.deleteMax();
             //q1.remove(current);
-            System.out.println(q.size());
+
             //q.remove(current);
-            //if(current.getBound() > max) {
+           if(current.getBound() >= max) {
 
 
             Node with = new Node(current, true, items, capacity, numItems);
             Node without = new Node(current, false, items, capacity, numItems);
 
-            if (with.getWeight() < capacity) {        //if with is feasible
+            if (with.getWeight() <= capacity) {        //if with is feasible
                 if (with.getKnown() == numItems) {
-                    if (with.getValue() > max) {
+                    if (with.getValue() > max ) {
                         max = with.getValue();
                         maxNode = with;
                     }
                 } else {
-                    if (with.getBound() > max) {
+                    if (with.getBound() >= max) {
                         q.add(with);
                         //q1.add(with);
                     }
                 }
             }
 
-            //if(without.getWeight() < capacity){        //if without is feasible (it should be)
-            if (without.getKnown() == numItems) {
-                if (without.getValue() > max) {
-                    max = without.getValue();
-                    maxNode = without;
+            if(without.getWeight() <= capacity) {        //if without is feasible (it should be)
+                if (without.getKnown() == numItems) {
+                    if (without.getValue() > max) {
+                        max = without.getValue();
+                        maxNode = without;
 
+                    }
+                } else {
+                    if (without.getBound() >= max) {
+                        q.add(without);
+                        //q1.add(without);
+                    }
                 }
-            } else {
-                if (without.getBound() > max) {
-                    q.add(without);
-                    //q1.add(without);
-                }
-            }
-            //}
-
-            //}
-
         }
 
+            }
+
+        }
+        System.out.println(max);
         int w = 0;
         int v = 0;
         boolean[] result = new boolean[numItems];
