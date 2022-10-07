@@ -1,16 +1,31 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class Bruteforce {
 
+
+    public static void main(String[] args) throws IOException {
+        String filename = "src/data/easy4.txt";
+        int ni[] = {0};int c[] = {0};
+        ArrayList<Item> items = fileHelper.loadItems(filename, ni, c);
+        Collections.sort(items);
+        int numItems = ni[0];
+        int capacity = c[0];
+        Bruteforce.run(capacity, numItems, items);
+    }
     public static void run(int capacity, int numItems, ArrayList<Item> items){
+        long startTime = System.nanoTime();
         int brute[] = bruteForce(capacity, numItems, items);
         System.out.print(  "Using Bruteforce the best feasible solution found: \t\t\tValue "+ brute[0]);
         System.out.print( ", Weight "+ brute[numItems+1]);
         for(int i = 0; i < numItems+1; i++){
             if(brute[i] == 1) System.out.print(" " + (i));
         }
-        System.out.println();
+        long endTime   = System.nanoTime();
+        long totalTime = endTime - startTime;
+        System.out.println("\t\tTime:" + totalTime/1000 + " us");
     }
     private static int[] bruteForce(int capacity, int numItems, ArrayList<Item> items){
 

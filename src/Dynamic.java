@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -5,7 +6,20 @@ import java.util.Comparator;
 
 public class Dynamic {
 
-    public static void run(int capacity, int numItems, ArrayList<Item> items){
+
+    public static void main(String[] args) throws IOException {
+        String filename = "src/data/easy50.txt";
+        int ni[] = {0};int c[] = {0};
+        ArrayList<Item> items = fileHelper.loadItems(filename, ni, c);
+        Collections.sort(items);
+        int numItems = ni[0];
+        int capacity = c[0];
+        Dynamic.run(capacity, numItems, items);
+    }
+
+    public static void run(int capacity, int numItems, ArrayList<Item> itemsIn){
+        long startTime = System.nanoTime();
+        ArrayList<Item> items = new ArrayList<>(itemsIn);
         boolean[] result = new boolean[numItems];
         int totalWeight = 0;
         int totalValue = 0;
@@ -23,12 +37,6 @@ public class Dynamic {
             }
         int n = capacity;
         int v = table[n];
-
-        Collections.sort(items, new Comparator<Item>() {
-            public int compare(Item o1, Item o2) {
-                return o2.getWeight() - o1.getWeight();
-            }
-        });
         int weight = 0;
         int val = 0;
         ArrayList<Item> tempItems = new ArrayList<Item>(items);
@@ -36,7 +44,7 @@ public class Dynamic {
             boolean found = false;
             for(Item i: tempItems) {
                 if(n-i.getWeight() >= 0) {
-                    if(!result[i.getIndex() - 1])
+                    //if(!result[i.getIndex() - 1])
                         if (table[n] - i.getValue() == safeGet(table, n - i.getWeight())) {
                             n = n - i.getWeight();
                             v = v - i.getValue();
@@ -51,13 +59,14 @@ public class Dynamic {
             }
             if(!found) n--;
         }
-
         System.out.print(  "Using Dynamic the best feasible solution found: \t\t\tValue "+ totalValue);
         System.out.print( ", Weight "+ totalWeight);
         for(int i = 0; i < numItems; i++){
             if(result[i]) System.out.print(" " + (i+1));
         }
-        System.out.println();
+        long endTime   = System.nanoTime();
+        long totalTime = endTime - startTime;
+        System.out.println("\t\tTime:" + totalTime/1000 + " us");
 
     }
 

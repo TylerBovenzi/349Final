@@ -23,6 +23,20 @@ public class Node implements Comparable{
 
         }
 
+        public Node(Node parent, boolean including, ArrayList<Item> items, int capacity, int numItems, int[][] boundTable){
+            this.parent = parent;
+            this.value = parent.value;
+            this.known = parent.known + 1;
+            if(including) value += items.get(known-1).getValue();
+            this.weight = parent.weight;
+            if(including) weight += items.get(known-1).getWeight();
+            this.including = including;
+            this.bound = 0;
+            if(known != numItems) { this.bound = weight < capacity? value+boundTable[known][capacity-this.weight]:value;
+            } else this.bound=value;
+
+        }
+
         public Node(int bound){
             this.parent = null;
             this.value = 0;
@@ -83,7 +97,6 @@ public class Node implements Comparable{
         @Override
         public int compareTo(Object o) {
             Node other = (Node)o;
-            //return (-this.getBound()) + (other.getBound());
             return -this.getBound() + other.getBound();
         }
     }
